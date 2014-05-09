@@ -1,0 +1,146 @@
+<% content_for :content_right do %>
+<div>
+	  <h3><lable style="color:green;"><a href="/project/diagram/<%= @project.id %>"><%= @project.project_name %></a></lable></h3>
+	  <table class="table" align="center">
+	    <tr>
+	    	<th>测试文件</th>
+	    	<th>操作</th>
+	    </tr>
+	  <% @test_file.each do |test_file| %>
+	  	<tr>
+	  		<td><%= test_file.test_file_name %></td>
+	  		<td><%= link_to '做成测试文件', :controller=>"test_file", :action=>"show", :id=>test_file.id %> |  <%= link_to '查看测试文件', :controller=>"examples", :action=>"show", :test_file_id=>test_file.id %> | <a href="#" class="update_test_file" data="<%= test_file.id %>">修改测试文件</a>  |  <%= link_to '删除测试文件', "/test_file/destroy/#{test_file.id}", :onclick => "return confirm('Are you sure?')" %> | <a href="#" class="download_testfile" data="<%= test_file.id %>">下载文件</a></td>
+	  	</tr>
+	  <% end %>
+	  </table>
+	  <button class="create_test_file">创建新的测试文件</button>
+    <!-- <h4><lable style="color:green;">已经上传的文件</lable></h4> -->
+    <div>
+      <div class="attachment_left">
+        已经上传的测试文件
+      </div>
+      <div class="attachment_right">
+      <%=form_tag '/attachments/upload', :multipart => true, :method=>"post", :id=>"upload_form" do %>
+        <div class="content-file">
+          <table>
+          <tr>
+            <td>
+              <%= file_field_tag "attachment", :accept => 'application/vnd.ms-excel'%>
+              <input type="hidden" name="project_id" value="<%= @project.id %>">
+            </td>
+            <td><%= submit_tag "UpLoad", :id=>"upload_file", :onclick=>"valid_file(); return false; "%></td>
+          </tr>
+          </table>
+        </div>
+      <% end %>
+      </div>
+    </div>
+    <% if(@attachment_all.length>0) %>
+      <div id="attachment_all">
+        <table class="table">
+          <tr>
+            <th>编号</th>
+            <th>文件名</th>
+            <th>操作</th>
+          </tr>
+          <% @attachment_all.each_with_index do |item,index| %>
+            <tr>
+              <td><%= index+1 %></td>
+              <td><%= item.file_name %></td>
+              <td>
+                <button class="download" data="<%= item.id %>">download</button>
+              </td>
+          </tr>
+          <% end %>
+        </table>
+      </div>
+    <% end %>   
+</div>
+
+<div style="border:1px solid #CCC;width:370px;height:150px;position:absolute;top:200px;left:200px;display:none;background-color:white;" id="test_file_new_id">
+    <div class="pro_edit_top" style="width:100%;height:20%;background-color:#3399FF;margin-bottom:15px;font-size: 1.1em;">
+      <label style="margin-left: 10px;margin-top: 3px;font-size: 1.0em;">新建测试文件</label>
+    </div>
+    <form action="/test_file/create" method="post" class="form-horizontal" role="form">     
+        <div class="form-group">
+          <label for="inputaffirm" class="col-sm-3 control-label" >文件名:</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="affirm" name="test_file_name" placeholder="" style="width:80%;"> 
+          </div>
+        </div>
+        <div style="margin-left:95px;">
+          <input type="hidden" name="project_id" value="<%= @project.id %>">
+          <button type="submit" class="btn btn-primary">提交</button> &nbsp;&nbsp;&nbsp;&nbsp;<button type="reset" class="btn btn-primary">重置</button>&nbsp;&nbsp;&nbsp; <button class="cancel btn btn-primary">取消</button>
+        </div>
+    </form>
+  </div>
+
+<!-- 修改测试文件 -->
+
+<div id="test_file_update_id">
+  <div class="test_file_update_id_top"><label>修改测试文件</label></div>
+  <div class="test_file_update_id_content">
+  	<form method="post" id="testfile_edit_form" class="form-horizontal" role="form">
+      <div class="form-group">
+        <label for="inputstatus" class="col-sm-3 control-label">文件名：</label>
+        <div class="col-sm-9">
+          <input type="text" class="form-control" id="test_file_input" name="test_file_name" placeholder="" style="width:80%;">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" style="margin-left:60px;margin-top:0px;">Submit</button>
+      <button type="reset" class="btn btn-primary" style="margin-left:20px;margin-top:0px;">Reset</button>
+      <button type="reset" class="btn btn-primary cancel" style="margin-left:20px;margin-top:0px;">Cancel</button>
+    </form>
+  </div>
+	
+</div>
+
+<script>
+  $("document").ready(function(){
+  	$(".create_test_file").click(function(){
+  		$("#test_file_new_id").css("display","block");
+  	});
+    $(".cancel").click(function(){
+  	  $("#test_file_new_id").css("display","none");
+  	  return false;
+   });
+    $(".update_test_file").click(function(){
+    	$("#test_file_update_id").css("display","block");
+    	var key = $(this).attr("data");
+      var action_url = "/test_file/"+key+"/edit_test_file";
+      $("#testfile_edit_form").attr("action", action_url);
+      var get_info_url = "/test_file/"+key+"/get_info";
+      $.get(get_info_url,function(data){
+        console.log(data)
+        $("#test_file_input").val(data.test_file_name)
+      });        
+    });
+    $(".cancel").click(function(){
+    	$("#test_file_update_id").css("display","none");
+    });
+    $(".download").click(function(){
+      var key=$(this).attr("data");
+      window.location.href = "/attachments/download?attachment_id="+key;
+
+    })
+    $(".download_testfile").click(function(){
+      var key=$(this).attr("data");
+      window.location.href = "/test_file/download_testfile?test_file_id="+key;
+    });
+  });
+
+  function valid_file(){
+    var file_path = $("#attachment").val();
+    var arr = file_path.split(".");
+    var file_type = arr[arr.length - 1];
+    if(file_type == "xls"){
+      $("#upload_form").submit();
+    }else{
+      alert("file type is not correct!");
+    }
+    
+  }
+  
+
+</script>
+<% end %>

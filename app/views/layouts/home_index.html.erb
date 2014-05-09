@@ -1,0 +1,133 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>在线测试系统</title>
+  <%= stylesheet_link_tag "bootstrap" %>
+  <%= stylesheet_link_tag "home_index" %>
+  <%= stylesheet_link_tag "style" %>
+  <%= stylesheet_link_tag "example_case" %>
+  <%= javascript_include_tag "application" %>
+  <%= javascript_include_tag "jquery-2.0.3.min" %>
+  <%= javascript_include_tag "bootstrap.min" %>
+  <%= yield :css%>
+  <style type="text/css">
+    body{
+      background:url(<%= asset_path 'bodybg.jpg'%>) repeat-x;
+      font-family: Verdana, Geneva, sans-serif;
+    }
+  </style>
+  <script type="text/javascript">
+    function tuozhuai(xx){
+      xx.onmousedown=function(ev){
+        xx.style.cursor="hand";
+        var disX=0;
+        var disY=0;
+        var oEvent = ev || event;
+        disX = oEvent.clientX-xx.offsetLeft;
+        disY = oEvent.clientY-xx.offsetTop;
+        document.onmousemove=function(e){
+          var oEvent = e || event
+          var l = oEvent.clientX-disX;
+          var t = oEvent.clientY-disY;
+          if(l<0){
+            l=0;
+          }
+          if(t<0){
+            t=0;
+          }
+          xx.style.left = l+"px";
+          xx.style.top = t+"px";
+        }
+        document.onmouseup=function(){
+          document.onmousemove=null;
+          document.onmouseup=null;
+        }
+      }
+    }
+  </script>
+</head>
+<body>
+  <div id="bodywrap">
+    <section id="pagetop">
+      <div id="siteinfo">Resource Orchestrator Test</div>
+      <div id="siteinfo_right">
+        <a href="/project/index">首页</a>
+        <a href="javascript:history.go(-1)">返回</a>
+        <a href="#" class="manager_a">管理<span class="caret"></span></a>
+        <div id="siteinfo_right_dropdown">
+          <ul class="siteinfo_right_dropdown_ul">
+            <a href="/versions/index" style="color:black;"><li class="siteinfo_right_dropdown_li" style="margin-top:-20px;padding-left:30px;">版本管理</li></a>
+            <a href="/groups/index" style="color:black;"><li class="siteinfo_right_dropdown_li" style="margin-top:-20px;padding-left:30px;">组管理</li></a>
+            <a href="/users/index" style="color:black;"><li class="siteinfo_right_dropdown_li" style="margin-top:-20px;padding-left:30px;">用户管理</li></a>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+  </div>
+  <div id="contents">
+  <div id="contents-left">
+  <div id="contents-left-top">
+    <div id="contents_left_all_group">所有组</div>
+      <div id="contents-left-bottom">
+      <ul class="contents-left-bottom-ul">
+          <% @groups_all.each do |items| %>
+            <li class="contents-left-bottom-ul-li">
+              <h4 style="padding-left:30px; cursor:pointer">
+                <a href="/project/find_project_group?group_id=<%= items.id %>"><%= items.group_name %></a>
+              </h4>
+            </li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div id="contents-right">
+    <%= yield :content_search %>
+    <%= yield :content_right %>
+  </div>
+  </div>
+  <div id="pagefooter">
+    <div id="footerwrap">
+        Copyright © 2013 NANJING FUJITSU NANDA SOFTWARE TECHNOLOGY CO., LTD. 京ICP备05052384号
+    </div>
+  </div>
+
+
+</body>
+</html>
+<%= yield :js %>
+<script type="text/javascript">
+  $("document").ready(function(){
+    var timer;
+    $(".contents-left-bottom-ul-li h4").click(function(){
+      var dom = $(".contents-left-bottom-ul-item", $(this).parent());
+      dom.fadeToggle(0);
+    });
+    $(".contents-left-bottom-ul-li").mouseover(function(){
+      $(this).css("background","#ffffcc");
+    }).mouseout(function(){
+      $(this).css("background","");
+    });
+    $(".manager_a").click(function(){
+      $("#siteinfo_right_dropdown").css("display","block");
+      $(".siteinfo_right_dropdown_ul li").click(function(){
+        $("#siteinfo_right_dropdown").css("display","none");
+      })
+    })
+    $(".siteinfo_right_dropdown_li").mouseover(function(){
+      $(this).css("background","#CCC");
+    }).mouseout(function(){
+      $(this).css("background","");
+    })
+    $("#siteinfo_right_dropdown").mouseout(function(){
+      timer = setTimeout(function(){
+        $("#siteinfo_right_dropdown").css("display","none");
+      },200);
+    });
+    $(".siteinfo_right_dropdown_ul").mouseover(function(){
+      clearTimeout(timer);
+    })
+  });
+</script>

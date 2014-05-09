@@ -1,0 +1,17 @@
+<% content_for :content_right do %>
+<div id="group_form">
+  <%= form_for (@group), url: {action: "create"} do |f| %>
+    <table>
+      <tr>
+        <td>组名：</td>
+        <td><%= f.text_field :group_name%></td>
+      </tr>
+      <tr>
+        <td></td>
+        <td><%= f.submit '提交' %></td>
+      </tr>
+    </table>
+  <% end %>
+  <span style="cursor:hand;"></span>
+</div>
+<% end %>

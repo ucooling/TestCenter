@@ -1,0 +1,17 @@
+<% content_for :content_right do %>
+<div id="test_file_form">ssss
+	<%= form_for (@test_file), url: {action: "create"} do |f| %>
+    <table>
+    	<tr>
+    		<td>测试文件</td>
+    		<td><%= f.text_field :test_file_name%></td>
+    	</tr>
+    	<tr>
+    		<td><input type="hidden" name="project_id" value="<%= @test_file.project_id %>"></td>
+    		<td><%= f.submit '提交' %></td>
+    	</tr>
+    </table>
+	<% end %>
+</div>
+
+<% end %>

@@ -1,0 +1,14 @@
+<div id="test_file_form">
+	<%= form_for @test_file, url: {action: "create"} do |f|%>
+    <table>
+    	<tr>
+    		<td>测试文件</td>
+    		<td><%= f.text_field :test_file_name%></td>
+    	</tr>
+    	<tr>
+    		<td></td>
+    		<td><%= f.submit '提交' %></td>
+    	</tr>
+    </table>
+	<% end %>
+</div>

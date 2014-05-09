@@ -1,0 +1,32 @@
+<% content_for :content_search do %>
+  <div>
+    <%= form_tag "/project/project_search", :method=>"post" do %>
+      <p>
+        <%= label_tag :number, "时间：" , :class=>"loginlabel"%>
+        <%= select_tag(:work_y, options_for_select(@work_year), :style=>"width:140px;height:25px;margin-top:5px;") %>
+        <%= label_tag  :password ,"编号：" , :class=>"loginlabel" %>
+        <%= select_tag(:identifer, options_for_select(@identifers), :style=>"width:140px;height:25px;margin-top:5px;") %>
+        <%= hidden_field_tag 'group_name', @group_id %>
+        <%= submit_tag "查询" , :disable_with => "请等待……" , :style=>"background-color:#f5f5f5;width:60px;margin-left:100px;",:class=>"button btn" %>
+      </p>
+  <% end %>
+  </div>
+<% end %>
+
+<hr/>
+
+<% content_for :content_right do %>
+<div>
+    <table class="table">
+      <% @project_search.each do |project| %>
+        <tr>
+          <td><%= project.project_name %></td>
+          <td><%= link_to 'Show', "/project/show/#{project.id}" %></td>
+          <td><%= link_to 'Destroy', "/project/destroy/#{project.id}", :onclick => "return confirm('Are you sure?')" %></td>
+        </tr>     
+      <% end %>
+    </table>
+
+</div>
+
+<% end %>

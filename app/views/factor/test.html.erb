@@ -1,0 +1,21 @@
+<div>
+	<h3>对应的测试文件</h3>
+	  <%= @test_file.test_file_name %>
+	  <br/>
+	  <%= link_to "添加要因", :controller=>"factor", :action=>"new" %>
+	  <br/>
+	  <table cellpadding="0" cellspacing="0" border="1">
+	  <% @factor.each do |factor| %>
+	    <tr>
+	    	<th>要因</th>
+	    	<th>操作</th>
+	    </tr>	  
+	  	<tr>
+	  		<td><%= factor.factor_name %></td>
+	  		<td><%= link_to '添加因子', :controller=>"divisor", :action=>"new", :factor_id=>factor.id  %></td>
+	  	</tr>
+	  <% end %>
+	  </table>
+	  <br/>
+	  <%= link_to '生成case', :controller=>"rule", :action=>"create", :test_file=>@test_file.id %>
+</div>

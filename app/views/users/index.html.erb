@@ -1,0 +1,89 @@
+<% content_for :content_right do %>
+  <div id="project_index_top">
+    <span class="project_index_top_span">所有用户列表</span>
+  </div> 
+  <div id="varsion_content" style="height:400px;margin-left:-20px;"> 
+    <table class="table">
+      <tr>
+        <th>用户名</th>
+        <th>用户密码</th>
+        <th>操作</th>
+      </tr>
+      <% @users.each do |item| %>
+        <tr>
+          <td><%= item.username %></td>
+          <td><%= item.password %></td>
+          <td>
+            <a href="#" class="update_v" data="<%= item.id %>">Update</a>&nbsp;&nbsp;
+            <a href="/users/delete/<%= item.id %>" onclick="confirm('Are you sure!')">Delete</a>
+            <a href="#"></a>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+
+  <button class="btn btn-primary add_version" >添加新用户</button>
+  </div>
+
+  <div id="update_version">
+    <div id="update_version_top">
+      <label class="update_version_top_label" style="display:none">修改用户信息</label>
+      <label class="update_version_top_label_add" style="display:none">添加新用户</label>
+      <!-- <a href="javascript:;" onclick="closereception();" title="关闭"><img src="assets/images/closes.gif" /></a> -->
+    </div>
+    <div>
+      <form method="post" id="ver_update_form" class="form-horizontal" role="form">
+      <div class="form-group" style="margin-top:10px;">
+        <label for="inputstatus" class="col-sm-4 control-label" >输入用户：</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="username" name="username" placeholder="" style="width:80%;">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputstatus" class="col-sm-4 control-label">输入密码：</label>
+        <div class="col-sm-8">
+          <input type="text" class="form-control" id="password" name="password" placeholder="" style="width:80%;">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" style="margin-left:75px;margin-top:10px;width:70px;">Submit</button>
+      <button type="reset" class="btn btn-primary" style="margin-left:20px;margin-top:10px;width:70px;">Reset</button>
+      <button type="reset" class="btn btn-primary" style="margin-left:20px;margin-top:10px;width:70px;" onclick="cancel_update();">Cancel</button>
+    </form>
+    </div>
+    
+  </div>
+
+   <script>
+    function cancel_update(){
+      $("#update_version").css("display","none");
+      return false;
+    }
+
+    $("document").ready(function(){
+      $(".update_v").click(function(){
+        $("#update_version").css("display","block");
+        $(".update_version_top_label_add").css("display","none")
+        $(".update_version_top_label").css("display","block")
+        var key = $(this).attr("data");
+        var action_url = "/users/"+key+"/update_user";
+        $("#ver_update_form").attr("action", action_url);
+        var get_info_url = "/users/"+key+"/get_info";
+        $.get(get_info_url,function(data){
+          console.log(data)
+          $("#username").val(data.username);
+          $("#password").val(data.password);
+        });
+      });
+
+      //add new user
+      $(".add_version").click(function(){
+        $("#update_version").css("display","block");
+        $(".update_version_top_label").css("display","none")
+        $(".update_version_top_label_add").css("display","block")
+        var action_url = "/users/create_user";
+        $("#ver_update_form").attr("action", action_url);
+      })
+    });
+  </script>
+
+  <% end %>

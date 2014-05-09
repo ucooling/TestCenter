@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title>在线测试系统</title>
+  <%= stylesheet_link_tag "bootstrap" %>
+  <%= stylesheet_link_tag "home_index" %>
+  <%= stylesheet_link_tag "example_case" %>
+  <%= javascript_include_tag "application" %>
+  <%= javascript_include_tag "jquery-2.0.3.min" %>
+  <%= javascript_include_tag "bootstrap.min" %>
+  <%= yield :css%>
+  <style type="text/css">
+    body{
+      background:url(<%= asset_path 'bodybg.jpg'%>) repeat-x;
+      font-family: Verdana, Geneva, sans-serif; 
+    }
+  </style>
+</head>
+<body>
+  <div id="bodywrap">
+    <section id="pagetop">
+      <div id="siteinfo">Resource Orchestrator Test</div>
+      <div id="siteinfo_right">
+        <a href="/project/index">首页</a>
+        <a href="javascript:history.go(-1)">返回</a>
+        <a href="/examples/save_examples">保存</a>
+        <a href="#">首页</a>
+      </div>
+    </section>
+  </div>
+  <div id="example">
+    <%= yield :content %>
+  </div>
+  <div id="pagefooter">
+    <div id="footerwrap">
+        Copyright © 2013 NANJING FUJITSU NANDA SOFTWARE TECHNOLOGY CO., LTD. 京ICP备05052384号
+    </div>
+  </div>
+</body>
+</html>
+<script type="text/javascript">
+  $("document").ready(function(){
+    $(".contents-left-bottom-ul-li h4").click(function(){
+      var dom = $(".contents-left-bottom-ul-item", $(this).parent());
+      dom.fadeToggle(0);
+    });
+    $(".contents-left-bottom-ul-li").mouseover(function(){      
+      $(this).css("background","#ffffcc");
+    }).mouseout(function(){
+      $(this).css("background","");
+    });
+    $(".contents-left-bottom-ul-item-xx a");
+
+    // $("#save_example").click(function(){
+    //   window.location.href = "/examples/save_example"
+    // })
+  });
+
+</script>

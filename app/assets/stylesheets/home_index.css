@@ -1,0 +1,129 @@
+
+   a{
+    text-decoration: none;
+   }
+   #pagetop{
+    height: 34px;
+    padding:0 20px;
+    display: block;
+    margin: 0;
+   }
+   #siteinfo{
+    height: 20px;
+    line-height: 30px;
+    float: left;
+    color: white;
+    font-style: italic;
+    font-size: 1.2em;
+    padding:0;
+    margin-top: 1px;
+   }
+   #siteinfo_right{
+    float:right;
+    margin-right:100px;
+    margin-top:5px;
+   }
+   #siteinfo_right a{
+    color:white;
+    margin-left:30px;
+    text-decoration: none;
+   }
+   #contents-left{
+    padding:2px 0px;
+    background:url(<%= asset_path 'sidebarbg.jpg'%>) 0px 0 repeat-y;
+    height: 660px;
+    min-width: 20%;
+    margin-top: 11px;
+    display: inline-block;
+    position: relative;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+
+   }
+   #contents{
+    margin:0 auto;
+    width: 99%;
+    height: 100%;
+    display: inline-block;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    box-shadow: 2px 2px 1px #888888;
+   }
+   #pagefooter{
+    width: 98%;
+    margin: 0 auto;
+    color: black;
+    padding-top: 10px;
+    margin-top:15px;
+   }
+   #footerwrap{
+    float: left;
+    width: 70%;
+    font-size: 14px;
+    margin-left: 350px;
+    /*margin-top: 620px;*/
+   }
+   #contents-right{
+    border:1px solid #ccc;
+    width:78%;
+    height: auto;
+    position: absolute;
+    top:44px;
+    left:297px;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 15px;
+    display: inline-block;
+    padding-left: 19.6px;
+   }
+   #contents-left-top{
+    width:280px;
+    height: 30px;
+    font-style: italic;
+    background-color: #666666;
+    font-size: 1em;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    margin-top: -2px;
+   }
+   .contents-left-bottom-ul li{
+     list-style: none;
+   }
+   .contents-left-bottom-ul-item{
+    display: none;
+   }
+   .contents-left-bottom-ul-item-xx{
+    display: block;
+   }
+   .contents-left-bottom-ul-item a{
+    text-decoration: none;
+    font-size: 1.3em;
+   }
+   .contents-left-bottom-ul-item a:hover{
+    color:red;
+    text-decoration: none;
+   }
+   .contents-left-bottom-ul-item a:active{
+    color:green;
+    text-decoration: none;
+   }
+   #contents_left_all_group{
+    padding-top:5px;
+    margin-left:10px;
+    color: white;
+    margin-bottom:10px;
+   }
+   .contents-left-bottom-ul li{
+    border:1px solid #CCC;
+    margin-left:-40px;
+    height:auto;
+    cursor:pointer
+   }
+  .diagram_table_1{
+    margin-top:20px;
+    height:120px;
+    width:90%;
+    margin-left:56px;
+    overflow-y: auto;
+    overflow-x: auto;
+    margin-bottom: 10px;
+  }

@@ -1,0 +1,50 @@
+/*userd for dargram view page*/
+.diagram_div {
+  text-align: center;
+  width: 102%;
+  display: block;
+  margin-top: 10px;
+  margin-left: -20px;
+}
+
+.diagram_table {
+  text-align: left;
+  width: 90%;
+  height: 170px;
+  display: block;
+  margin: 0 auto;
+  overflow: auto;
+}
+
+.diagram_table_total_count {
+  background-color: gray;
+}
+
+.diagram_comments {
+  margin-left: 50px;
+  display: inline-block;
+}
+
+.comment {
+  text-align: left;
+}
+.comment_ok{
+  width: 10px;
+  height: 5px;
+  background-color: #F38630;
+}
+.comment_ng{
+  width: 10px;
+  height: 5px;
+  background-color: #E0E4CC;
+}
+.comment_ng_ok{
+  width: 10px;
+  height: 5px;
+  background-color: #69D2E7;
+}
+.comment_undo{
+  width: 10px;
+  height: 5px;
+  background-color: black;
+}

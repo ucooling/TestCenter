@@ -1,0 +1,17 @@
+<% content_for :content_right do %>
+<div id="test_file_form">
+	<%= form_for (@divisor), url: {action: "create"} do |f| %>
+    <table>
+    	<tr>
+    		<td>添加因子</td>
+    		<td><%= f.text_field :divisor_name%></td>
+    	</tr>
+    	<tr>
+    		<td><input type="hidden" name="factor_id" value="<%= @divisor.factor_id %>"></td>
+    		<td><%= f.submit '提交' %></td>
+    	</tr>
+    </table>
+	<% end %>
+</div>
+
+<% end %>

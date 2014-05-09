@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  work_year: MyString
+  identifer: MyString
+
+two:
+  work_year: MyString
+  identifer: MyString

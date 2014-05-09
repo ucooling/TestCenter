@@ -1,0 +1,323 @@
+<% content_for :content_right do %>
+<div>
+    <label class="test_file_show">
+	    <a href="#", data="<%= @project_id %>", id="back_test_file"><%= @project_name%></a>&nbsp;&nbsp;&nbsp;<label>--></label>&nbsp;&nbsp;&nbsp;<%= @test_file.test_file_name %>
+    </label>
+	  <br/>
+    <div style="margin-bottom:15px;">
+      <button name="create_case" id="sublim_case" class="btn btn-info" style="height:35px;">生成case</button>
+      <button name="add_factor" id="add_factor" class="btn btn-info" style="height:35px;" data="<%= @test_file.id %>">添加要因</button>
+    </div>
+    <div id="create_case">
+  	  <table class="table table-bordered">
+  	    <tr>
+  	      <th style="min-width:200px;">操作</th>
+  	    	<th style="min-width:200px;">要因</th>
+  	    </tr>
+  	    <% @factor.each_with_index do |factor,index| %>
+  	  	<tr>
+  	  	  <td style="min-width:270px;">
+            <a href="#" class="add_divisor" data="<%= factor.id %>">添加因子</a>
+            <%= link_to '删除要因', url_for(:controller=>"factor", :action=>"destroy",:id=>factor.id),:method=>:delete , :confirm => "Are you sure?"%>
+            <a href="#" class="destroy_divisor" data="<%= factor.id %>">删除因子</a>
+          </td>
+  	  		<td style="min-width:200px;"><a href="#" class="update_factor" data="<%= factor.id %>"><%= factor.factor_name %></a></td>
+  	  		<% divisor =[] %>
+  	  		<%
+            divisor= Divisor.find(:all, :conditions=>{:factor_id=>"#{factor.id}"},:order=>:queue)
+          %>
+  	  		<% divisor.each do |d| %>
+  	  		<td style="min-width:300px;"><input type="checkbox" value="<%= d.id %> " name="factor_<%= index+1 %>">&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="update_divisor" data="<%= d.id %>"><%= d.divisor_name %></a></td>
+  	  		<% end %>
+  	  	</tr>
+  	  <% end %>
+  	  </table>
+    </div>
+
+</div>
+<div id="destroy_divisor">
+  <div class="destroy_divisor_top">
+    <label>因子操作</label>
+  </div>
+  <div class="destroy_divisor_left"></div>
+  <div class="destroy_divisor_middle">
+    <label class="middle_first">--></label>
+    <label class="middle_second"><--</label>
+  </div>
+  <div class="destroy_divisor_right"></div>
+  <div class="destroy_divisor_bottom">
+    <label>
+      <button class="btn right_div">提交</button>
+      <button class="btn cancel">取消</button>
+    </label>
+  </div>
+</div>
+
+<%# 隐藏的div用来处理要因和因子的添加 %>
+  <div id="factor_divisor">
+    <div id="update_version_top">
+      <label class="add_factor_top_label" style="display:none">添加要因</label>
+      <label class="add_divisor_top_label_add" style="display:none">添加因子</label>
+      <label class="update_factor_top_label" style="display:none">编辑要因</label>
+      <label class="update_divisor_top_label_add" style="display:none">编辑因子</label>
+      <!-- <a href="javascript:;" onclick="closereception();" title="关闭"><img src="assets/images/closes.gif" /></a> -->
+    </div>
+    <div>
+      <form method="post" id="ver_update_form" class="form-horizontal" role="form">
+        <div class="form-group" style="margin-top:10px;">
+          <label class="add_factor_top_label col-sm-4 control-label" style="display:none">添加要因</label>
+          <label class="add_divisor_top_label_add col-sm-4 control-label" style="display:none">添加因子</label>
+          <label class="update_factor_top_label col-sm-4 control-label" style="display:none">编辑要因</label>
+          <label class="update_divisor_top_label_add col-sm-4 control-label" style="display:none">编辑因子</label>
+          <div class="col-sm-8">
+            <input type="text" class="control" id="factor_divistor_name" name="factor_divistor_name" placeholder="" style="width:85%;">
+            <input type="hidden" class="control" id="test_file_or_factor" name="test_file_or_factor" placeholder="" style="width:85%;">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="update_divisor_top_label_add_1 col-sm-4 control-label">序列编号</label>
+          <div class="col-sm-8">
+            <input type="text" class="control" id="queue" name="queue" placeholder="" style="width:85%;">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin-left:90px;margin-top:10px;width:70px;">Submit</button>
+        <button type="reset" class="btn btn-primary" style="margin-left:10px;margin-top:10px;width:70px;">Reset</button>
+        <button type="reset" class="btn btn-primary" style="margin-left:10px;margin-top:10px;width:70px;" onclick="cancel_update();">Cancel</button>
+      </form>
+    </div>
+
+  </div>
+
+<script>
+  window.onload=function(){
+    $("#sublim_case").attr("disabled","disabled")
+    setInterval(function(){
+      var factor_size = <%= @factor.size %>;
+      var data_case=[];
+      for(var i=1;i<=factor_size;i++){
+          var arr=[];
+          if($("input[name='factor_"+i+"']").each(function(i){
+            if($(this).is(':checked')){
+              var value= $(this).val();
+              arr.push(value);
+            }
+          }))
+          if (arr.length!=0){
+            data_case.push(arr);
+          }
+      }
+      if(data_case.length>=2){
+        $("#sublim_case").attr("disabled",false)
+      }
+      else{
+        $("#sublim_case").attr("disabled","disabled")
+      }
+    },50)
+  }
+	function encodeArray2D(obj) {
+    var array = [];
+    for (var i = 0; i < obj.length; i++) {
+        array[i] = '[' + obj[i].join(',') + ']';
+    }
+    return '[' + array.join(',') + ']';
+}
+  	$("document").ready(function(){
+  	var factor_size = <%= @factor.size %>;
+    var data_case=[];
+    $("#sublim_case").click(function(){
+    	for(var i=1;i<=factor_size;i++){
+    		var arr=[];
+    		if($("input[name='factor_"+i+"']").each(function(i){
+          if($(this).is(':checked')){
+          	var value= $(this).val();
+          	arr.push(value);
+          }
+    		}))
+        if (arr.length!=0){
+    		    data_case.push(arr);
+          }
+    }
+    var xx=encodeArray2D(data_case)
+    alert(xx)
+    window.location.href = "/rule/create?test_file=<%= @test_file.id %>&data="+xx
+    });
+
+	});
+
+    //使用Ajax获得某一个要因的因子列表
+    $("document").ready(function(){
+      $(".destroy_divisor").click(function(){
+        $("#destroy_divisor").css("display","block");
+        var key = $(this).attr("data");
+        var get_info_url = "/factor/"+key+"/get_info";
+        $.get(get_info_url,function(data){
+          var j = data.divisors.length;
+          var i=0;
+          var divisor_list_div = $(".destroy_divisor_left");
+          var divisor_list_div_right = $(".destroy_divisor_right");
+          var divisor_list_div_label = $(".destroy_divisor_left div");
+          //var divisor_list_div_br = $(".destroy_divisor_left br");
+          divisor_list_div_label.remove();
+          //divisor_list_div_br.remove();
+          for(i=0;i<j;i++){
+            var divisor = null;
+            var br = null;
+            divisor = document.createElement("div")
+            //br = document.createElement("br")
+            divisor.setAttribute("class","divisor_click");
+            divisor.setAttribute("value",data.divisors[i].id)
+            divisor.innerHTML=data.divisors[i].divisor_name;
+            divisor_list_div.append(divisor)
+            //divisor_list_div.append(br)
+          }
+
+          //绑定鼠标滑过事件，添加样式
+          $(".divisor_click").mouseover(function(){
+            $(this).css("cursor","pointer");
+            $(this).css("background-color","yellow");
+          }).mouseout(function(){
+            $(this).css("background-color","white");
+          })
+
+          $(".divisor_click").click(function(){
+            //从左向右移动
+            if(this.className == "divisor_click"){
+              var removed_dom = $(this).detach();
+              divisor_list_div_right.append(removed_dom);
+            // 从右向左移动
+              removed_dom.attr("class","click_divisor_right");
+            }else if(this.className == "click_divisor_right"){
+              var removed_dom_right = $(this).detach();
+              divisor_list_div.append(removed_dom_right);
+              removed_dom_right.attr("class","divisor_click");
+            }
+
+          });
+
+        });
+      });
+      $(".cancel").click(function(){
+        $(".destroy_divisor_left div").remove();
+        $(".destroy_divisor_right div").remove();
+        $("#destroy_divisor").css("display","none");
+      });
+
+      //绑定返回到某一个测试文件做成页面的上一个页面
+      $("#back_test_file").click(function(){
+        var key = $(this).attr("data");
+        window.location.href="/project/show/"+key
+      })
+
+
+    //当点击提交的时候获得右侧的所有div的value
+    $(".right_div").click(function(){
+      var all_div = $(".click_divisor_right");
+      var j = all_div.length
+      var right_div_value=[]
+      for(var i=0;i<j;i++){
+        var val=null;
+        val = all_div[i].getAttribute("value");
+        right_div_value.push(val);
+      }
+      $("#destroy_divisor").css("display","none");
+      window.location.href="/divisor/destroy?divisor_arr="+right_div_value;
+    })
+
+    });
+
+
+    //对添加要因跟因子的div的操作
+    function cancel_update(){
+    $("#factor_divisor").css("display","none");
+    return false;
+  }
+
+  $("document").ready(function(){
+    //add要因
+    $("#add_factor").click(function(){
+      $("#factor_divisor").css("display","block");
+      $(".add_factor_top_label").css("display","block")
+
+      $(".add_divisor_top_label_add").css("display","none")
+      $(".update_factor_top_label").css("display","none")
+      $(".update_divisor_top_label_add").css("display","none")
+
+      $("#test_file_or_factor").val("<%= @test_file.id %>")
+      var action_url = "/factor/create";
+      $("#ver_update_form").attr("action", action_url);
+      var key = $(this).attr("data");
+      var get_info_url = "/factor/"+key+"/get_info_create";
+      $.get(get_info_url,function(data){
+        console.log(data)
+        $("#queue").val(data.queue+1);
+      });
+    });
+
+    //add因子
+    $(".add_divisor").click(function(){
+      $("#factor_divisor").css("display","block");
+      $(".add_divisor_top_label_add").css("display","block")
+
+      $(".add_factor_top_label").css("display","none")
+      $(".update_factor_top_label").css("display","none")
+      $(".update_divisor_top_label_add").css("display","none")
+
+      var key = $(this).attr("data");
+      $("#test_file_or_factor").val(key);
+      var action_url = "/divisor/create";
+      $("#ver_update_form").attr("action", action_url);
+      var key = $(this).attr("data");
+      var get_info_url = "/divisor/"+key+"/get_info_create";
+      $.get(get_info_url,function(data){
+        console.log(data)
+        $("#queue").val(data.queue+1);
+      });
+    });
+
+    //编辑要因
+    $(".update_factor").click(function(){
+      $("#factor_divisor").css("display","block");
+      $(".update_factor_top_label").css("display","block")
+
+      $(".add_factor_top_label").css("display","none")
+      $(".add_divisor_top_label_add").css("display","none")
+      $(".update_divisor_top_label_add").css("display","none")
+
+      var key = $(this).attr("data");
+      var action_url = "/factor/"+key+"/edit";
+      $("#ver_update_form").attr("action", action_url);
+      var get_info_url = "/factor/"+key+"/get_info_update";
+      $.get(get_info_url,function(data){
+        console.log(data)
+        $("#factor_divistor_name").val(data.factor_divistor_name);
+        $("#queue").val(data.queue);
+      });
+    });
+
+    //编辑因子
+    $(".update_divisor").click(function(){
+      $("#factor_divisor").css("display","block");
+      $(".update_divisor_top_label_add").css("display","block")
+
+      $(".add_factor_top_label").css("display","none")
+      $(".add_divisor_top_label_add").css("display","none")
+      $(".update_factor_top_label").css("display","none")
+
+      var key = $(this).attr("data");
+      var action_url = "/divisor/"+key+"/edit";
+      $("#ver_update_form").attr("action", action_url);
+      var get_info_url = "/divisor/"+key+"/get_info_update";
+      $.get(get_info_url,function(data){
+        console.log(data)
+        $("#factor_divistor_name").val(data.factor_divistor_name);
+        $("#queue").val(data.queue);
+      });
+    });
+  });
+
+
+</script>
+
+<% end %>
+
+

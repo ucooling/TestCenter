@@ -1,0 +1,15 @@
+<% content_for :content_right do %>
+<div>
+  <h3>所有的工程</h3>
+    <table>
+      <% @project.each do |project| %>
+        <tr>
+          <td><%= project.project_name %></td>
+          <td><%= link_to 'Show', "/project/show/#{project.id}" %></td>
+          <td><%= link_to 'Destroy', "/project/destroy/#{project.id}", :confirm=>"Are you sure!" %></td>
+        </tr>     
+      <% end %>
+
+</div>
+
+<% end %>

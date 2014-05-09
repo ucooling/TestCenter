@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  divisor_name: MyString
+  factor_id: 1
+
+two:
+  divisor_name: MyString
+  factor_id: 1

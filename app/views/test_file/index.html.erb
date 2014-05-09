@@ -1,0 +1,13 @@
+<% content_for :content_right do %>  
+<div>
+	<h3>所有测试文件</h3>
+	  <table>
+		  <% @test_file.each do |file| %>
+	      <tr>
+	      	<td><%= file.test_file_name%></td>
+	      	<td><%= link_to 'Show', "/test_file/show/#{file.id}" %></td>
+	      </tr>     
+		  <% end %>
+	  </table>
+</div>
+<% end %>

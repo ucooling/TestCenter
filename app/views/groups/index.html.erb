@@ -1,0 +1,71 @@
+<% content_for :content_right do %>
+<div id="project_index_top">
+  <span class="project_index_top_span">所有组列表</span>
+</div>
+<div id="group_index">
+  <table class="table table-bordered">
+    <% @group.each do |item| %>
+    <tr>
+      <td><%= item.group_name%></td>
+      <td><%= link_to 'Delete', "/groups/delete/#{item.id}",:onclick => "return confirm('Are you sure?')" %></td>
+      <td><%= link_to 'Update', "#", :class=>"update_group", :data=>item.id %></td>
+    </tr>     
+    <% end %>
+  </table>
+  <button class="btn btn-primary add_group" >添加新组</button>
+</div>
+
+  <div id="update_group">
+    <div id="update_version_top">
+      <label class="update_group_top_label" style="display:none">修改组名</label>
+      <label class="update_group_top_label_add" style="display:none">添加新组</label>
+      <!-- <a href="javascript:;" onclick="closereception();" title="关闭"><img src="assets/images/closes.gif" /></a> -->
+    </div>
+    <div>
+      <form method="post" id="ver_update_form" class="form-horizontal" role="form">
+        <div class="form-group" style="margin-top:10px;">
+          <label for="inputstatus" class="col-sm-4 control-label" >输入组名：</label>
+          <div class="col-sm-8">
+            <input type="text" class="form-control" id="group_name" name="group_name" placeholder="" style="width:85%;">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="margin-left:60px;margin-top:10px;width:70px;">Submit</button>
+        <button type="reset" class="btn btn-primary" style="margin-left:20px;margin-top:10px;width:70px;">Reset</button>
+        <button type="reset" class="btn btn-primary" style="margin-left:20px;margin-top:10px;width:70px;" onclick="cancel_update();">Cancel</button>
+      </form>
+    </div>
+    
+  </div>
+<script type="text/javascript">
+
+  function cancel_update(){
+    $("#update_group").css("display","none");
+    return false;
+  }
+
+  $("document").ready(function(){
+    $(".update_group").click(function(){
+      $("#update_group").css("display","block");
+      $(".update_group_top_label_add").css("display","none")
+      $(".update_group_top_label").css("display","block")
+      var key = $(this).attr("data");
+      var action_url = "/groups/"+key+"/update_group";
+      $("#ver_update_form").attr("action", action_url);
+      var get_info_url = "/groups/"+key+"/get_info";
+      $.get(get_info_url,function(data){
+        console.log(data)
+        $("#group_name").val(data.group_name);
+      });
+    });
+
+    //add new version
+    $(".add_group").click(function(){
+      $("#update_group").css("display","block");
+      $(".update_group_top_label").css("display","none")
+      $(".update_group_top_label_add").css("display","block")
+      var action_url = "/groups/create_group";
+      $("#ver_update_form").attr("action", action_url);
+    })
+  });
+</script>
+<% end %>

@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  content: MyString
+  status: MyString
+  affirm: MyString
+  result: MyString
+  implement_time: 2013-10-30
+  implement_people: MyString
+  remark: MyString
+  again_implement_time: 2013-10-30
+  again_implement_people: MyString
+
+two:
+  content: MyString
+  status: MyString
+  affirm: MyString
+  result: MyString
+  implement_time: 2013-10-30
+  implement_people: MyString
+  remark: MyString
+  again_implement_time: 2013-10-30
+  again_implement_people: MyString

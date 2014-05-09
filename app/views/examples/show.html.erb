@@ -1,0 +1,362 @@
+<% content_for :content_right do %>
+<div id="content">
+<div id="example_top">
+  <div class="example_top_1">编号</div>
+  <div class="example_top_2">内容</div>
+  <div class="example_top_3">正常/异常</div>
+  <div class="example_top_4">确认内容</div>
+  <div class="example_top_5">测试结果</div>
+  <div class="example_top_6">实施日</div>
+  <div class="example_top_7">实施者</div>
+  <div class="example_top_9">再实施日</div>
+  <div class="example_top_10">再实施者</div>
+  <div class="example_top_11"><button  data-toggle="modal" data-target="#myModal" class="set_default btn-info" style="width:103px;">set default</button></div>
+</div>
+<div id="example_table">
+<table valign="middle">
+  <tbody>
+	  <% @example.each_with_index do |example,index| %>
+      <tr class="example_case_parent" data="<%= example.id %>" style="<%="background:#ccc" if example.remark == 1%>">
+        <td class="example_top_1"><%= index+1 %></td>
+        <td class="example_top_2">
+          <% arr_array = example.content.split(",") %>
+          <% str = nil %>
+          <% arr_array.each do |item| %>
+            <% @factor %>
+            <% @factor = Factor.find_by_id((Divisor.find(item)).factor_id)%>
+            <%= @factor.factor_name%>-><%= @arr[item]%>
+            <br/>
+          <% end %>
+        </td>
+        <td class="example_top_3"><%= example.status %></td>
+        <td class="example_top_4"><%= example.affirm %></td>
+        <td class="example_top_5"><%= example.result %></td>
+        <td class="example_top_6"><%= example.implement_time %></td>
+        <td class="example_top_7"><%= example.implement_people %></td>
+        <td class="example_top_9"><%= example.again_implement_time %></td>
+        <td class="example_top_10"><%= example.again_implement_people %></td>
+        <td class="example_top_11">
+          <button data-toggle="modal" class="btn-info edit_case" data-target="#myModal" style="width:50px;" data="<%= example.id%>">edit</button>
+          <button class="example_case btn-info" value="fill" data="<%= example.id%>" style="width:50px;">color</button>
+          <button class="delete_case btn-danger" data="<%= example.id%>" style="width:50px;margin-top:3px;" onclick="confirm(Are you sure)">delete</button>
+        </td>
+      </tr>
+	  <% end %>
+  </tbody>
+	</table>
+  <button id="delete_all_case" class="set_default btn-info" style="width:103px;margin-top:30px;margin-left:940px;margin-bottom:10px;">删除所有case</button>
+  </div>
+ <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Edit Case</h4>
+      </div>
+      <div class="modal-body" style="height:600px;width:650px;">
+        <div class="tabbable edit-tab">
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab1" data-toggle="tab">Evidence</a></li>
+            <li><a href="#tab2" data-toggle="tab">General</a></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab1">
+            <form method="post" id="evidence_form" class="form-horizontal" role="form">
+              <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">img:</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control screen_img" id="upload_img" name="upload_img" placeholder="">
+                  <div id="preview_img" class="preview_img">
+                  </div>
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary" style="margin-left:107px;margin-top:10px;">Submit</button>
+              </form>
+            </div>
+            <div class="tab-pane" id="tab2">
+              <form method="post" id="edit_form" class="form-horizontal" role="form">
+                <div class="form-group">
+                  <label for="inputstatus" class="col-sm-2 control-label">正常/异常:</label>
+                  <div class="col-sm-10">
+                  <select class="form-control" style="width:80%;" id="status" name="status">
+                    <option></option>
+                    <option>正常</option>
+                    <option>异常</option>
+                  </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="inputaffirm" class="col-sm-2 control-label" >确认内容:</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="affirm" name="affirm" placeholder="" style="width:80%;">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="inputEmail3" class="col-sm-2 control-label">测试结果:</label>
+                  <div class="col-sm-10">
+                    <select class="form-control" style="width:80%;" id='result' name="result">
+                      <option></option>
+                      <option>OK</option>
+                      <option>NG</option>
+                      <option>NG-OK</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="inputEmail3" class="col-sm-2 control-label">实施日:</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="implement_time" name="implement_time" placeholder="" style="width:80%;">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="inputEmail3" class="col-sm-2 control-label">实施者:</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="implement_people" name="implement_people" placeholder="" style="width:80%;">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="inputEmail3" class="col-sm-2 control-label">标记:</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="remark" name="remark" placeholder="" style="width:80%;" disabled=false>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="inputEmail3" class="col-sm-2 control-label">再实施日:</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="again_implement_time" name="again_implement_time" placeholder="" style="width:80%;">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="inputEmail3" class="col-sm-2 control-label">再实施者:</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="again_implement_people" name="again_implement_people" placeholder="" style="width:80%;">
+                  </div>
+                </div>
+                <input type="hidden" name="example_id" id="example_id">
+                <input type="hidden" name="test_file_id" id="test_file_id" value="<%= @test_file_id %>">
+                <button type="submit" class="btn btn-primary" style="margin-left:107px;margin-top:10px;">Submit</button>
+                <button type="reset" class="btn btn-primary" style="margin-left:30px;margin-top:10px;">Reset</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+ <script type="text/javascript">
+
+
+    window.onload=function(){
+      //查看每一个case是否可以编译
+      var examples = $(".example_case_parent");
+      <% @example.each_with_index do|item,index| %>
+        <% if item.remark == "1" %>
+          examples[<%= index %>].setAttribute("style","background:#CCC;");
+          $(".edit_case",examples[<%=index%>]).attr("disabled","disabled");
+          $(".fill",examples[<%=index%>]).val("cancel_fill");
+          $(".example_case",examples[<%=index%>]).html("cancel");
+        <% end %>
+      <% end %>
+      //获得滚动条的位置
+      var position = localStorage.getItem("position_table")
+      var table_position = document.getElementById("example_table");
+      document.getElementById("example_table").scrollTop=position;
+      localStorage.setItem("position_table",0);
+
+    }
+
+
+    $("document").ready(function(){
+    $(".edit_case").click(function(){
+      var key = $(this).attr("data");
+      var action_url = "/examples/"+ key +"/edit_case";
+      $("#edit_form").attr("action", action_url);
+      var get_info_url = "/examples/"+ key +"/get_info";
+      $.get(get_info_url, function(data){
+        $("#status").val(data.status);
+        $("#affirm").val(data.affirm);
+        $("#result").val(data.result);
+        $("#implement_time").val(data.implement_time);
+        $("#implement_people").val(data.implement_people);
+        $("#again_implement_time").val(data.again_implement_time);
+        $("#again_implement_people").val(data.again_implement_people);
+        $("#example_id").val(data.example_id);
+        if(typeof(data.flag) == "undefined"){
+          $("#upload_img").attr("disabled",false);
+          $("#preview_img").empty();
+        }else if(data.flag){
+          $("#upload_img").attr("disabled",false);
+          $("#preview_img").empty();
+
+        }else{
+          $("#upload_img").attr("disabled",false);
+          $("#preview_img").empty();
+          var new_img = document.createElement('img');
+          new_img.setAttribute('src', data.evidence_uri);
+          new_img.setAttribute('id', "tmp_img");
+          new_img.style.width = "100%";
+          new_img.style.height = "100%";
+          var new_link = document.createElement('a');
+          new_link.target = "_blank";
+          new_link.href = data.evidence_uri;
+          new_link.appendChild(new_img);
+          document.getElementById('preview_img').appendChild(new_link);
+        }
+      });
+    });
+
+    //delete case
+    $(".delete_case").click(function(){
+      if(confirm("Are you sure")){
+        var table_position = document.getElementById("example_table");
+        var xx = table_position.scrollTop;
+        var key = $(this).attr("data");
+        localStorage.setItem('position_table',xx);
+        // var xxx = localStorage.getItem('position_table')
+        // console.log(xxx)
+        window.location.href = "/examples/delete_case?example_id="+key
+      }
+      else{
+        return false;
+      }
+      // window.location.href = "/examples/delete_case?example_id="+key+"&table_position="+xx+"&test_file_id="+<%= @test_file_id %>
+      // var get_info_url = "/examples/"+ key +"/delete_case";
+      // $.get(get_info_url, function(data){
+      //   history.go(0);
+      //   table_position.scrollTop = xx
+      // });
+
+    })
+
+    //delete all case
+    $("#delete_all_case").click(function(){
+      alert("dd")
+      var all_case = $(".example_case_parent");
+      var all_case_id = [];
+      for(var i=0,j=all_case.length;i<j;i++){
+        all_case_id.push(all_case[i].getAttribute("data"));
+      }
+      console.log(all_case_id)
+      window.location.href="/examples/delete_all_case?delete_case="+all_case_id
+    });
+
+    $(".set_default").click(function(){
+      $("#edit_form").attr("action","/examples/set_default");
+    });
+
+
+    $(".example_case").click(function(){
+      var key = $(this).attr("data");
+      var select_dom = this;
+
+      if($(this).val()==="fill"){
+        $(this).parents('.example_case_parent').css("background","#CCC");
+        $(".edit_case",$($(this).parent())).attr("disabled","disabled");
+        $(".edit_case",$($(this).parent())).attr("style","background:#CCC;width:50px;");
+        $(this).val("cancel_fill");
+        $(this).html("cancel");
+        var get_info_url = "/examples/"+ key +"/cancel_edit";
+        $.get(get_info_url, function(data){
+        });
+
+
+      }
+      else{
+        if($(this).attr("data_key")==="odd"){
+          $(this).parents('.example_case_parent').css("background","");
+          $(".edit_case",$($(this).parent())).attr("disabled",false);
+          $(".edit_case",$($(this).parent())).attr("style","width:50px;");
+          $(this).val("fill");
+          $(this).html("color");
+         // console.log(select_dom);
+          var get_info_url = "/examples/"+ key +"/able_edit";
+          $.get(get_info_url, function(data){
+          });
+        }
+        else{
+          $(this).parents('.example_case_parent').css("background","");
+          $(".edit_case",$($(this).parent())).attr("disabled",false);
+          $(".edit_case",$($(this).parent())).attr("style","width:50px;");
+          $(this).val("fill");
+          $(this).html("color");
+          var get_info_url = "/examples/"+ key +"/able_edit";
+          $.get(get_info_url, function(data){
+          });
+        }
+      }
+    });
+
+    //$("tr:odd").css("background","#gray");
+    //$("tr:odd .example_case").attr("data_key","odd");
+    //$("tr:even .example_case").attr("data_key","even");
+
+    //img ajax upload
+    document.getElementById("upload_img").addEventListener("paste", function(e){
+      items = e.clipboardData.items;
+      for (var i = 0; i < items.length; ++i) {
+        if (items[i].kind == 'file' && items[i].type.indexOf('image/') !== -1){
+          img_blob = items[i].getAsFile();
+          preview_img(img_blob);
+          var key = $("#example_id").val();
+          var send_img_url = "/examples/" + key + "/upload_img";
+          send_img(send_img_url,items[i].getAsFile());
+        }
+      }
+    });
+
+    function preview_img(img_blob){
+      window.URL = window.URL || window.webkitURL;
+      var blobUrl = window.URL.createObjectURL(img_blob);
+      var new_img = document.createElement('img');
+      new_img.setAttribute('src', blobUrl);
+      new_img.setAttribute('id', "tmp_img");
+      new_img.style.width = "100%";
+      new_img.style.height = "100%";
+      var new_link = document.createElement('a');
+      new_link.target = "_blank";
+      new_link.href = blobUrl;
+      new_link.appendChild(new_img);
+      document.getElementById('preview_img').appendChild(new_link);
+    }
+
+    function send_img(url,img_data){
+      var form_data = new FormData();
+      form_data.append("upload_file", img_data);
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', url, true);
+      xhr.onload = function(e) {};
+      xhr.send(form_data);
+    }
+
+    $("#evidence_form button").on("click",function edit_evidence(){
+      if ($("#upload_img").attr("disabled")){
+        return false;
+      }else{
+        var evidence_id = $("#upload_img").val();
+        var key = $("#example_id").val();
+        var post_data = {evidence_id:evidence_id}
+        var url = "/examples/" + key + "/edit_evidence";
+        $.post(url, post_data, function(data){
+          $("#myModal").modal("hide");
+          $(".modal-backdrop").remove();
+        });
+        return false;
+      }
+    });
+
+  });
+
+   function cancel_example_edit(){
+    $(this).parents('.example_case_parent').css("background","#CCC");
+    $(".edit_case",$($(this).parent())).attr("disabled","disabled");
+    $(this).val("cancel_fill");
+    $(this).html("cancel");
+   }
+  </script>
+
+<% end %>
+
+
+

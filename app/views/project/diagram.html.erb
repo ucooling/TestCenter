@@ -1,0 +1,204 @@
+<%= content_for :css do %>
+  <%= javascript_include_tag "Chart.min" %>
+  <%= stylesheet_link_tag "diagram" %>
+<%end%>
+
+<% content_for :content_right do %>
+  <div id="project_index_top">
+    <span class="project_index_top_span"><a href="/project/show/<%= @project.id%>"><%= @project.project_name%></a><span style="color:green;font-weight: bold;">&nbsp;&nbsp;-->&nbsp;&nbsp;</span>Summary</span>
+  </div>
+<% total_complete_count = @diagram_data[:total_ok_count] + @diagram_data[:total_ng_count] +@diagram_data[:total_ng_ok_count]%>
+  <div class="well well-large diagram_div">
+    <!-- <h3 class="text-center"><%= @project.project_name%></h3> -->
+    <canvas class="myChart" width="200" height="200"></canvas>
+    <div class="diagram_comments">
+      <div class="comment">
+        <span class="comment_ok">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <span class="control-label">OK</span>
+      </div>
+      <div class="comment">
+        <span class="comment_ng">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <span class="control-label">NG</span>
+      </div>
+      <div class="comment">
+        <span class="comment_ng_ok">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <span class="control-label">NG-OK</span>
+      </div>
+      <div class="comment">
+        <span class="comment_undo">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <span class="control-label">Undo</span>
+        <span class="control-label">(<%= total_percent = 100-get_percent(total_complete_count, @diagram_data[:total_count])%>%)</span>
+      </div>
+    </div>
+    <canvas class="MemberCase" width="200" height="200"></canvas>
+    <div class="diagram_comments_1">
+    </div>
+  </div>
+
+  <div class="diagram_table">
+    <table class="table table-condensed table-hover table-bordered table-striped" >
+      <tr class="info">
+        <td  class="table-title">File Name</td>
+        <td  class="table-title">OK</td>
+        <td  class="table-title">NG</td>
+        <td  class="table-title">NG-OK</td>
+        <td  class="table-title">Total</td>
+        <td  class="table-title">未完成</td>
+        <td  class="table-title">完成</td>
+        <td  class="table-title">Percent</td>
+      </tr>
+    <%@diagram_data[:file_data].each do|file_data|%>
+      <% complete_count = file_data[:ok_count] + file_data[:ng_count] +file_data[:ng_ok_count]%>
+      <tr class="info">
+        <td  class="table-title test_file_click" data="<%= file_data[:file_id]%>" style="cursor:pointer"><%= file_data[:file_name]%></td>
+        <td  class="table-title"><%= file_data[:ok_count]%></td>
+        <td  class="table-title"><%= file_data[:ng_count]%></td>
+        <td  class="table-title"><%= file_data[:ng_ok_count]%></td>
+        <td  class="table-title"><%= file_data[:case_count]%></td>
+        <td  class="table-title"><%= file_data[:case_count] - complete_count%></td>
+        <td  class="table-title"><%= complete_count%></td>
+        <td  class="table-title"><%= get_percent(complete_count, file_data[:case_count]).to_s + "%"%></td>
+      </tr>
+    <%end%>
+      <tr class="diagram_table_total_count">
+        <td  class="table-title">総計</td>
+        <td  class="table-title"><%= @diagram_data[:total_ok_count]%></td>
+        <td  class="table-title"><%= @diagram_data[:total_ng_count]%></td>
+        <td  class="table-title"><%= @diagram_data[:total_ng_ok_count]%></td>
+        <td  class="table-title"><%= @diagram_data[:total_count]%></td>
+        <td  class="table-title"><%= @diagram_data[:total_count] - total_complete_count%></td>
+        <td  class="table-title"><%= total_complete_count%></td>
+        <td  class="table-title"><%= get_percent(total_complete_count, @diagram_data[:total_count]).to_s + "%"%></td>
+      </tr>
+    </table>
+  </div>
+<div class="diagram_table_1">
+  <table class="table table-condensed table-hover table-bordered table-striped">
+    <tr>
+      <th>测试人员</th>
+      <th>完成cese数</th>
+      <th>所占比例</th>
+    </tr>
+    <% @result.each do |key,value| %>
+      <tr>
+        <td><%= key %></td>
+        <td><%= value %></td>
+        <td>
+        <% count=0 %>
+        <% @result.each do |key,value| %>
+          <% count += value %>
+        <% end %>
+        <%= value %>/<%= count %></td>
+      </tr>
+    <% end %>
+  </table>
+</div>
+<%end%>
+
+
+<% content_for :js do %>
+  <script type="text/javascript">
+  function total(){
+    var member=[]
+    <% @result.each do |key,value|%>
+      member.push(<%= value %>)
+    <% end %>
+    var count=0;
+    for(var j=0;j<member.length;j++){
+      count +=member[j]
+    }
+    return count
+  }
+    //Get context with jQuery - using jQuery's .get() method.
+  var ctx = $(".myChart").get(0).getContext("2d");
+  //This will get the first returned node in the jQuery collection.
+  var myNewChart = new Chart(ctx);
+  //demo: Line Diagram
+  var line_data = {
+  labels : ["January","February","March","April","May","June","July"],
+  datasets : [
+    {
+      fillColor : "rgba(220,220,220,0.5)",
+      strokeColor : "rgba(220,220,220,1)",
+      pointColor : "rgba(220,220,220,1)",
+      pointStrokeColor : "#fff",
+      data : [65,59,90,81,56,55,40]
+    },
+    {
+      fillColor : "rgba(151,187,205,1)",
+      strokeColor : "rgba(151,187,205,1)",
+      pointColor : "rgba(151,187,205,1)",
+      pointStrokeColor : "#fff",
+      data : [28,48,40,19,96,27,100]
+    }
+  ]
+  };
+  //new Chart(ctx).Line(line_data);
+  //demo: Pie Diagram
+  var pie_data = [
+  {
+    //OK count
+    value: <%=get_percent(@diagram_data[:total_ok_count], @diagram_data[:total_count])%>,
+    color: "#F38630"
+  },
+  {
+    //NG count
+    value: <%=get_percent(@diagram_data[:total_ng_count], @diagram_data[:total_count])%>,
+    color: "#E0E4CC"
+  },
+  {
+    //NG-OK count
+    value: <%=get_percent(@diagram_data[:total_ng_ok_count], @diagram_data[:total_count])%>,
+    color: "#69D2E7"
+  },
+  {
+    //undo count
+    value: <%=get_percent(@diagram_data[:total_count]-@diagram_data[:total_ok_count]-@diagram_data[:total_ng_count]-@diagram_data[:total_ng_ok_count], @diagram_data[:total_count])%>,
+    color: "black"
+  }
+  ];
+  new Chart(ctx).Pie(pie_data);
+
+  //统计每一个人的测试的case总数
+  //Get context with jQuery - using jQuery's .get() method.
+  var member=[];
+  var member_count=[];
+  <% @result.each do |key,value| %>
+    member_count.push("<%= key %>");
+    member.push(<%= value %>);
+  <% end %>
+
+  var ctx_member = $(".MemberCase").get(0).getContext("2d");
+  var data_member={
+    labels:member_count,
+    datasets:[
+      {
+        fillColor:"green",
+        strokeColor:"rgba(220,220,220,1)",
+        data:member
+      }
+    ]
+  };
+  // Bar.defaults = {
+  //     barValueSpacing : 10
+  // }
+  if(member.length >= 2){
+    new Chart(ctx_member).Bar(data_member) ;
+  }
+
+
+
+  $("document").ready(function(){
+    $(".test_file_click").click(function(){
+      var data = $(this).attr("data");
+      window.location.href ="/examples/show?test_file_id="+data;
+    })
+  })
+
+  //统计每个测试人员测试的case数
+  // This is the chart data as a semi-colon delimited string.
+    var chartData =
+        "Malb;150;Jup;100";
+
+  </script>
+<%end%>

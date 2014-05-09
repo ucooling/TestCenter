@@ -1,0 +1,14 @@
+<% content_for :content_right do %>
+<div id="factor_form">
+	<%= form_for (@factor), url: {action: "create"} do |f| %>
+    <table>
+    	<tr>
+    		<td>要因名:</td>
+    		<td><%= f.text_field :factor_name%></td>
+            <td><input type="hidden" name="test_file_id" value="<%= @factor.test_file_id %>"></td>
+            <td><%= f.submit '提交' %></td>
+    	</tr>
+    </table>
+	<% end %>
+</div>
+<% end %>
